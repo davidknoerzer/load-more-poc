@@ -1,0 +1,30 @@
+<div class="bg-gray-50 min-h-screen py-12 px-4">
+  @if (item(); as itemDetails) {
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+    <button
+      (click)="goBack()"
+      class="mb-8 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-300"
+    >
+      &larr; Back to Library
+    </button>
+
+    <h1 class="text-5xl font-bold text-gray-900 mb-4">
+      {{ itemDetails.title }}
+    </h1>
+
+    <img
+      [src]="itemDetails.imageUrl"
+      [alt]="itemDetails.title"
+      class="w-full h-80 object-cover rounded-lg mb-6"
+    />
+    <p class="text-gray-700 text-lg leading-relaxed">
+      This is the detailed view for {{ itemDetails.title }}. Here you would find
+      the full abstract, author information, publication dates, and links to the
+      full journal article. The content is dynamically loaded based on the item
+      you clicked from the library dashboard.
+    </p>
+  </div>
+  } @else {
+  <p class="text-center text-gray-500">Loading item details...</p>
+  }
+</div>
