@@ -35,7 +35,7 @@
               "optimization": false,
               "budgets": [],
               "outputHashing": "all",
-              "baseHref": "/show-more-poc-routing/"
+              "baseHref": "/load-more-poc/"
             },
             "development": {
               "optimization": false,
