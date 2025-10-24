@@ -11,7 +11,7 @@ import { Item } from '../../services/item.service';
 })
 export class ItemCardComponent {
   item = input.required<Item>();
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   goToDetail(itemId: number) {
     this.router.navigate(['/item', itemId]);

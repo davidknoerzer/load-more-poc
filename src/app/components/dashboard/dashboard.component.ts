@@ -2,7 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { RestoreScrollingDirective } from '../../directives/restore-scrolling.directive';
-import { Item, ItemService } from '../../services/item.service';
+import {
+  Item,
+  ItemService,
+  PagedItemsResponse,
+} from '../../services/item.service';
 import { ItemCardComponent } from '../item-card/item-card.component';
 
 @Component({
@@ -19,13 +23,16 @@ export class DashboardComponent implements OnInit {
 
   // --- RxJS Streams for State Management ---
   items$ = new BehaviorSubject<Item[]>([]);
+  totalItems = 0; // total items in backend
 
-  private currentPage = 1; // will be updated based on cached data
+  private currentPage = 1;
   private readonly itemService = inject(ItemService);
 
   ngOnInit(): void {
     // Restore cached items if available
     const cachedItems = this.itemService.getCachedItems();
+    this.totalItems = this.itemService.totalNumberOfItems(); // read from signal
+
     if (cachedItems.length > 0) {
       this.items$.next(cachedItems);
 
@@ -33,8 +40,7 @@ export class DashboardComponent implements OnInit {
       this.currentPage = Math.floor(cachedItems.length / this.itemsPerPage) + 1;
 
       // Check if we already loaded all items
-      if (cachedItems.length === 100) {
-        // total items known
+      if (cachedItems.length >= this.totalItems) {
         this.allItemsLoaded = true;
       }
     } else {
@@ -49,12 +55,18 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
 
     this.itemService.getPage(this.currentPage, this.itemsPerPage).subscribe({
-      next: (newItems) => {
+      next: (response: PagedItemsResponse) => {
         const currentItems = this.items$.getValue();
-        this.items$.next([...currentItems, ...newItems]); // append new items
+        this.items$.next([...currentItems, ...response.items]); // append new items
 
-        if (newItems.length < this.itemsPerPage) {
-          this.allItemsLoaded = true; // no more items to load
+        this.totalItems = response.totalCountOfItems;
+
+        // Check if all items have been loaded
+        if (
+          currentItems.length + response.countOfItems >=
+          response.totalCountOfItems
+        ) {
+          this.allItemsLoaded = true;
         }
 
         this.currentPage++;

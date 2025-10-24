@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -9,6 +9,12 @@ export interface Item {
   imageUrl: string;
 }
 
+export interface PagedItemsResponse {
+  totalCountOfItems: number;
+  countOfItems: number;
+  items: Item[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +22,7 @@ export class ItemService {
   private allItems: Item[] = [];
   private cachedItems: Item[] = []; // items already fetched
   private lastPageFetched = 0; // last page that has been fetched
+  totalNumberOfItems = signal<number>(0);
 
   constructor() {
     // Generate 100 dummy items
@@ -27,30 +34,38 @@ export class ItemService {
         imageUrl: `https://picsum.photos/seed/${i}/300/200`,
       });
     }
+
+    this.totalNumberOfItems.set(this.allItems.length);
   }
 
   /**
-   * Fetch a page of items.
+   * Fetch a page of items, returns a PagedItemsResponse.
    * Uses cached data if the page has already been fetched.
    */
-  getPage(page: number, limit: number): Observable<Item[]> {
-    // If the page has already been fetched, return cached items
-    if (page <= this.lastPageFetched) {
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      return of(this.cachedItems.slice(start, end));
-    }
-
-    // Otherwise, fetch new items and cache them
+  getPage(page: number, limit: number): Observable<PagedItemsResponse> {
+    const total = this.totalNumberOfItems();
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
-    const newItems = this.allItems.slice(startIndex, endIndex);
 
-    this.cachedItems = [...this.cachedItems, ...newItems];
-    this.lastPageFetched = page;
+    let items: Item[] = [];
+
+    // Return cached items if this page was already fetched
+    if (page <= this.lastPageFetched) {
+      items = this.cachedItems.slice(startIndex, endIndex);
+    } else {
+      items = this.allItems.slice(startIndex, endIndex);
+      this.cachedItems = [...this.cachedItems, ...items];
+      this.lastPageFetched = page;
+    }
+
+    const response: PagedItemsResponse = {
+      totalCountOfItems: total,
+      countOfItems: items.length,
+      items,
+    };
 
     // Simulate network latency
-    return of(newItems).pipe(delay(500));
+    return of(response).pipe(delay(500));
   }
 
   /**
@@ -62,7 +77,6 @@ export class ItemService {
 
   /**
    * Fetch a single item by ID.
-   * Returns cached item if available, otherwise fetches from allItems.
    */
   getItemById(id: number): Observable<Item | undefined> {
     const cached = this.cachedItems.find((item) => item.id === id);
