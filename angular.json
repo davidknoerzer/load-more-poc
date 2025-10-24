@@ -54,7 +54,21 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "show-more-poc-routing:build:production"
+              "outputPath": "dist/show-more-poc-routing",
+              "baseHref": "/show-more-poc-routing/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
             },
             "development": {
               "buildTarget": "show-more-poc-routing:build:development"
