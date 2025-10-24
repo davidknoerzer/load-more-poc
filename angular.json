@@ -31,11 +31,19 @@
           },
           "configurations": {
             "production": {
-              "outputPath": "dist/show-more-poc-routing",
-              "optimization": false,
-              "budgets": [],
-              "outputHashing": "all",
-              "baseHref": "/load-more-poc/"
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
