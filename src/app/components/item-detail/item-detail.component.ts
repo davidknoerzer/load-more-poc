@@ -28,7 +28,6 @@ export class ItemDetailComponent {
   }
 
   goBack(): void {
-    console.log('BACK BUTTON PUSHED');
     this.location.back();
   }
 }
