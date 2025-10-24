@@ -3,14 +3,14 @@ import { Component, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { Item, ItemService } from '../../services/item';
+import { Item, ItemService } from '../../services/item.service';
 
 @Component({
   selector: 'app-item-detail',
   imports: [CommonModule],
-  templateUrl: './item-detail.html',
+  templateUrl: './item-detail.component.html',
 })
-export class ItemDetail {
+export class ItemDetailComponent {
   item: Signal<Item | undefined>;
 
   private location = inject(Location);
@@ -28,6 +28,7 @@ export class ItemDetail {
   }
 
   goBack(): void {
+    console.log('BACK BUTTON PUSHED');
     this.location.back();
   }
 }
