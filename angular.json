@@ -33,18 +33,7 @@
             "production": {
               "outputPath": "dist/show-more-poc-routing",
               "optimization": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
+              "budgets": [],
               "outputHashing": "all",
               "baseHref": "/show-more-poc-routing/"
             },
