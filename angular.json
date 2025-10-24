@@ -31,6 +31,8 @@
           },
           "configurations": {
             "production": {
+              "outputPath": "dist/show-more-poc-routing",
+              "optimization": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -43,7 +45,8 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/show-more-poc-routing/"
             },
             "development": {
               "optimization": false,
