@@ -21,13 +21,16 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [{ "glob": "**/*", "input": "public" }],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
             "styles": ["src/styles.scss"]
           },
           "configurations": {
             "production": {
-              "outputPath": "dist/show-more-poc-routing",
-              "baseHref": "/show-more-poc-routing/",
               "budgets": [
                 {
                   "type": "initial",
@@ -54,21 +57,7 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "outputPath": "dist/show-more-poc-routing",
-              "baseHref": "/show-more-poc-routing/",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
-              "outputHashing": "all"
+              "buildTarget": "show-more-poc-routing:build:production"
             },
             "development": {
               "buildTarget": "show-more-poc-routing:build:development"
